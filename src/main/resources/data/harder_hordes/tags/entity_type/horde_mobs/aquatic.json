@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:drowned",
+    { "id": "minecraft:guardian", "required": false }
+  ]
+}

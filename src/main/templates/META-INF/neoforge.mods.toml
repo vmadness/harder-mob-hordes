@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/vmmad/harder-hordes/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''
+${mod_description}
+'''
+
+# Optional, no-hard-dependency integration hook. If Mowzie's Mobs is present we
+# load after it so its entities are registered before our tag-driven pools resolve.
+# This is NOT a required dependency — the mod runs fine standalone.
+[[dependencies.${mod_id}]]
+    modId="mowziesmobs"
+    type="optional"
+    versionRange="*"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

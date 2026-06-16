@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Harder Hordes",
+    "pack_format": 34,
+    "supported_formats": [34, 99]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wither_skeleton",
+    "minecraft:vindicator",
+    "minecraft:pillager"
+  ]
+}
