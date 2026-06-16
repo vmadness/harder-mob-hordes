@@ -1,0 +1,42 @@
+name: Release to CurseForge
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Read mod version
+        id: mod
+        run: echo "version=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build
+
+      - name: Upload to CurseForge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: ${{ secrets.CF_PROJECT_ID }}
+          game_endpoint: minecraft
+          file_path: build/libs/harder_hordes-${{ steps.mod.outputs.version }}.jar
+          display_name: Harder Mob Hordes ${{ steps.mod.outputs.version }}
+          game_versions: "Minecraft 1.21.1,Java 21,NeoForge"
+          release_type: release
+          changelog: "See https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+          changelog_type: markdown
