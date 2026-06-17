@@ -36,7 +36,7 @@ jobs:
           game_endpoint: minecraft
           file_path: build/libs/harder_hordes-${{ steps.mod.outputs.version }}.jar
           display_name: Harder Mob Hordes ${{ steps.mod.outputs.version }}
-          game_versions: "Minecraft 1.21.1,Java 21,NeoForge"
+          game_versions: "Minecraft 1.21:1.21.1,Java 21,NeoForge"
           release_type: release
           changelog: "See https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
           changelog_type: markdown
