@@ -19,6 +19,8 @@ public final class HordePools {
     public static final TagKey<EntityType<?>> CREEPER = pool("creeper");
     public static final TagKey<EntityType<?>> AQUATIC = pool("aquatic");
     public static final TagKey<EntityType<?>> ELITE = pool("elite");
+    public static final TagKey<EntityType<?>> NETHER = pool("nether");
+    public static final TagKey<EntityType<?>> END = pool("end");
 
     private HordePools() {
     }

@@ -38,12 +38,16 @@ The things people usually change:
 - **Bigger hordes:** `[size] baseSize`, `sizePerScore`, `maxSize`.
 - **Harder, faster:** `[difficulty]` weights and `scoreScale`. `scoreScale` is the
   master dial: it drives size, gear tiers, and the hybrid and elite gates at once.
-- **Better-armed mobs:** `[equip] equippedFraction` and `maxEquippedPerHorde`, plus the
-  `[tiers]` diamond and netherite thresholds.
+- **Tougher mobs by score:** `[scaling]` adds bonus health and attack damage that grow
+  with the progression score (each capped), on top of vanilla stats.
+- **Better-armed mobs:** `[equip] equippedFraction` (+ `equippedFractionPerScore`) and
+  `maxEquippedPerHorde`, plus the `[tiers]` diamond and netherite thresholds.
+- **Which dimensions:** `[spawn] dimensions` lists where hordes spawn. Each dimension
+  fields its own mobs (overworld undead, Nether fortress mobs, End horrors).
 - **Gear drops:** `[rewards] hordeChance` (set `0.0` to turn drops off). At most one mob
   per horde drops its gear; the rest drop nothing.
 - **Toggle mob types:** `[types]` switches `zombie`, `skeleton`, `creeper`, `aquatic`,
-  and `elite` on or off.
+  `elite`, `nether`, and `end` on or off.
 
 <details>
 <summary>Full config reference</summary>
@@ -58,7 +62,7 @@ The things people usually change:
 | `minSecondsBetweenHordes` | 600 | 0–14400 | Per-player cooldown in real seconds. |
 | `minRadius` | 24 | 8–128 | Min spawn distance from the player (blocks). |
 | `maxRadius` | 48 | 8–256 | Max spawn distance from the player (blocks). |
-| `overworldOnly` | true | bool | Restrict hordes to the Overworld. |
+| `dimensions` | `[overworld, the_nether, the_end]` | id list | Dimensions hordes spawn in. Each draws from its own mob pools. Short names `overworld`/`nether`/`end` also work. |
 | `minWorldDay` | 4 | 0–100000 | No hordes before this in-game day. |
 | `fullFrequencyDay` | 12 | 0–100000 | Chance ramps 0 → full between `minWorldDay` and this day. |
 
@@ -75,11 +79,22 @@ The things people usually change:
 
 | Key | Default | Range | Meaning |
 | --- | --- | --- | --- |
-| `equippedFraction` | 0.25 | 0–1 | Fraction of the horde that carries gear. |
+| `equippedFraction` | 0.25 | 0–1 | Base fraction of the horde that carries gear. |
+| `equippedFractionPerScore` | 0.02 | 0–1 | Extra equipped fraction per score point (capped at 1.0 total). |
 | `maxEquippedPerHorde` | 4 | 0–64 | Hard cap on armed mobs. |
-| `armorPieceChance` | 0.5 | 0–1 | Per-slot chance of an armor piece. |
+| `armorPieceChance` | 0.5 | 0–1 | Base per-slot chance of an armor piece. |
+| `armorPieceChancePerScore` | 0.03 | 0–1 | Extra per-slot armor chance per score point (capped at 1.0 total). |
 | `allowModdedGear` | true | bool | Allow weapons from `#harder_hordes:bonus_weapons`. |
 | `moddedGearChance` | 0.15 | 0–1 | Chance an armed mob uses a modded weapon (if any tagged). |
+
+### `[scaling]` — stat boosts that grow with score
+
+| Key | Default | Range | Meaning |
+| --- | --- | --- | --- |
+| `healthPerScore` | 0.5 | 0–100 | Bonus max health (half-hearts) added per score point. |
+| `maxHealthBonus` | 20.0 | 0–1024 | Cap on bonus max health a single mob can gain. |
+| `damagePerScore` | 0.15 | 0–100 | Bonus attack damage added per score point. |
+| `maxDamageBonus` | 4.0 | 0–1024 | Cap on bonus attack damage a single mob can gain. |
 
 ### `[rewards]` — the rare gear drop
 
@@ -118,7 +133,7 @@ The things people usually change:
 
 | Key | Default | Range | Meaning |
 | --- | --- | --- | --- |
-| `zombie` / `skeleton` / `creeper` / `aquatic` / `elite` | true | bool | Enable each horde type. |
+| `zombie` / `skeleton` / `creeper` / `aquatic` / `elite` / `nether` / `end` | true | bool | Enable each horde type. |
 | `skeletonEnchantedBowChance` | 0.4 | 0–1 | Chance a skeleton bow is enchanted. |
 | `skeletonSwordLeaderChance` | 0.5 | 0–1 | Chance the lead skeleton wields a sword. |
 | `eliteScoreGate` | 8.0 | 0–100 | Score before elite hordes can occur. |

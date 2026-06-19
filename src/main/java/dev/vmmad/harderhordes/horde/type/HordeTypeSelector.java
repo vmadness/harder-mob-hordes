@@ -24,6 +24,7 @@ public final class HordeTypeSelector {
         HordeDefinition elite = HordeTypeRegistry.get(HordeDefinitions.ELITE_ID);
         if (elite != null
                 && HordeDefinitions.isEnabled(elite, cfg)
+                && dimensionMatches(elite.dimension(), ctx)
                 && environmentMatches(elite.environment(), ctx)
                 && score.total() >= cfg.types().eliteScoreGate()) {
             double chance = Mth.clamp(
@@ -49,18 +50,22 @@ public final class HordeTypeSelector {
         return HordeComposition.single(primary);
     }
 
-    /** Enabled, non-elite definitions whose environment matches the spawn context. */
+    /** Enabled, non-elite definitions whose dimension and environment match the spawn context. */
     public static List<HordeDefinition> candidates(SpawnContext ctx, HordeConfig cfg) {
         List<HordeDefinition> candidates = new ArrayList<>();
         for (HordeDefinition def : HordeTypeRegistry.all()) {
             if (def.elite() || !HordeDefinitions.isEnabled(def, cfg)) {
                 continue;
             }
-            if (environmentMatches(def.environment(), ctx)) {
+            if (dimensionMatches(def.dimension(), ctx) && environmentMatches(def.environment(), ctx)) {
                 candidates.add(def);
             }
         }
         return candidates;
+    }
+
+    private static boolean dimensionMatches(HordeDimension dim, SpawnContext ctx) {
+        return dim == HordeDimension.ANY || dim == ctx.dimension();
     }
 
     private static boolean environmentMatches(Environment env, SpawnContext ctx) {

@@ -145,7 +145,8 @@ public final class HordeCommand {
                 .append(aquatic ? "water" : "land").append(")\n");
         for (HordeDefinition def : HordeTypeRegistry.all()) {
             sb.append(" - ").append(def.id())
-                    .append(" [").append(def.environment()).append(def.elite() ? ", elite" : "").append("]")
+                    .append(" [").append(def.dimension()).append(", ").append(def.environment())
+                    .append(def.elite() ? ", elite" : "").append("]")
                     .append(matching.contains(def) ? "  <- matches now" : "")
                     .append('\n');
         }

@@ -11,13 +11,15 @@ import net.minecraft.world.entity.EntityType;
  *
  * @param id          unique id, also the config-toggle key (path segment)
  * @param mobPool     entity-type tag the members are drawn from
- * @param environment where this horde may spawn
+ * @param dimension   which dimension family this horde may spawn in
+ * @param environment where (land/water) this horde may spawn
  * @param baseWeight  selection weight relative to other matching definitions
  * @param elite       whether this is a rare elite horde (gated by score + chance)
  */
 public record HordeDefinition(
         ResourceLocation id,
         TagKey<EntityType<?>> mobPool,
+        HordeDimension dimension,
         Environment environment,
         double baseWeight,
         boolean elite) {

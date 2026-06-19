@@ -8,6 +8,7 @@ import dev.vmmad.harderhordes.HarderHordes;
 import dev.vmmad.harderhordes.config.HordeConfig;
 import dev.vmmad.harderhordes.horde.difficulty.ProgressionScore;
 import dev.vmmad.harderhordes.horde.effect.HordeEffects;
+import dev.vmmad.harderhordes.horde.effect.StatScaling;
 import dev.vmmad.harderhordes.horde.equip.EquipmentApplier;
 import dev.vmmad.harderhordes.horde.reward.HordeLoot;
 import dev.vmmad.harderhordes.horde.type.HordeComposition;
@@ -69,6 +70,7 @@ public final class HordeSpawner {
 
         int[] chargedBudget = {cfg.creeper().maxCharged()};
         for (Mob mob : mobs) {
+            StatScaling.apply(mob, score, cfg);
             HordeEffects.apply(level, mob, score, cfg, rng, chargedBudget);
         }
 

@@ -55,7 +55,10 @@ public final class EquipmentApplier {
         if (n == 0) {
             return equipped;
         }
-        int target = (int) Math.round(n * cfg.equip().equippedFraction());
+        double fraction = Mth.clamp(
+                cfg.equip().equippedFraction() + score.total() * cfg.equip().equippedFractionPerScore(),
+                0.0, 1.0);
+        int target = (int) Math.round(n * fraction);
         int count = Mth.clamp(target, 0, Math.min(cfg.equip().maxEquippedPerHorde(), n));
         if (count <= 0) {
             return equipped;
@@ -95,8 +98,10 @@ public final class EquipmentApplier {
 
         boolean allowNetheriteArmor = s >= cfg.tiers().netheriteScoreThreshold();
         GearTier armorMax = TierTable.maxArmor(s, cfg, allowNetheriteArmor);
+        double armorChance = Mth.clamp(
+                cfg.equip().armorPieceChance() + s * cfg.equip().armorPieceChancePerScore(), 0.0, 1.0);
         for (EquipmentSlot slot : ARMOR_SLOTS) {
-            if (rng.nextDouble() < cfg.equip().armorPieceChance()) {
+            if (rng.nextDouble() < armorChance) {
                 Item armor = GearTier.rollUpTo(armorMax, rng).armorFor(slot);
                 if (armor != null) {
                     mob.setItemSlot(slot, new ItemStack(armor));

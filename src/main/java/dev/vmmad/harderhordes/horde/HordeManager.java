@@ -15,12 +15,12 @@ import dev.vmmad.harderhordes.horde.spawn.SpawnPositionFinder;
 import dev.vmmad.harderhordes.horde.spawn.SpawnScheduler;
 import dev.vmmad.harderhordes.horde.type.HordeComposition;
 import dev.vmmad.harderhordes.horde.type.HordeDefinition;
+import dev.vmmad.harderhordes.horde.type.HordeDimension;
 import dev.vmmad.harderhordes.horde.type.HordeTypeSelector;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
 
 /**
  * The brain. Called on a throttled interval (never every tick) by the loader's
@@ -54,7 +54,7 @@ public final class HordeManager {
     public static void tick(MinecraftServer server) {
         HordeConfig cfg = HordeConfigHolder.get();
         for (ServerLevel level : server.getAllLevels()) {
-            if (cfg.spawn().overworldOnly() && !level.dimension().equals(Level.OVERWORLD)) {
+            if (!cfg.spawn().dimensions().contains(level.dimension().location().toString())) {
                 continue;
             }
             if (level.players().isEmpty()) {
@@ -123,7 +123,7 @@ public final class HordeManager {
         RandomSource rng = level.getRandom();
         SpawnContext ctx = SpawnPositionFinder.find(level, player.blockPosition(), cfg, rng);
         if (ctx == null) {
-            ctx = new SpawnContext(player.blockPosition(), player.isInWater());
+            ctx = new SpawnContext(player.blockPosition(), player.isInWater(), HordeDimension.of(level));
         }
         ProgressionScore score = ProgressionScorer.score(level, player, cfg);
 

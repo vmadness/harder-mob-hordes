@@ -3,9 +3,11 @@ package dev.vmmad.harderhordes.horde.spawn;
 import javax.annotation.Nullable;
 
 import dev.vmmad.harderhordes.config.HordeConfig;
+import dev.vmmad.harderhordes.horde.type.HordeDimension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -28,6 +30,7 @@ public final class SpawnPositionFinder {
     public static SpawnContext find(ServerLevel level, BlockPos around, HordeConfig cfg, RandomSource rng) {
         int min = cfg.spawn().minRadius();
         int max = Math.max(min + 1, cfg.spawn().maxRadius());
+        HordeDimension dimension = HordeDimension.of(level);
 
         for (int attempt = 0; attempt < ATTEMPTS; attempt++) {
             double angle = rng.nextDouble() * Math.PI * 2.0;
@@ -45,12 +48,16 @@ public final class SpawnPositionFinder {
 
             FluidState feet = level.getFluidState(pos);
             FluidState below = level.getFluidState(pos.below());
+            if (feet.is(FluidTags.WATER) || below.is(FluidTags.WATER)) {
+                return new SpawnContext(pos, true, dimension);
+            }
+            // Any other fluid here (lava in the Nether) is not a place to drop a horde — keep looking.
             if (!feet.isEmpty() || !below.isEmpty()) {
-                return new SpawnContext(pos, true);
+                continue;
             }
 
             if (isStandable(level, pos)) {
-                return new SpawnContext(pos, false);
+                return new SpawnContext(pos, false, dimension);
             }
         }
         return null;
