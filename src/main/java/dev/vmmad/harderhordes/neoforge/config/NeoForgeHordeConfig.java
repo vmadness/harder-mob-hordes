@@ -89,6 +89,13 @@ public final class NeoForgeHordeConfig {
     private static final ModConfigSpec.DoubleValue DIAMOND_THRESHOLD;
     private static final ModConfigSpec.DoubleValue NETHERITE_THRESHOLD;
 
+    // ward (bell totems)
+    private static final ModConfigSpec.BooleanValue WARD_ENABLED;
+    private static final ModConfigSpec.IntValue WARD_IRON_RADIUS;
+    private static final ModConfigSpec.IntValue WARD_GOLD_RADIUS;
+    private static final ModConfigSpec.IntValue WARD_DIAMOND_RADIUS;
+    private static final ModConfigSpec.IntValue WARD_NETHERITE_RADIUS;
+
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
 
@@ -279,6 +286,31 @@ public final class NeoForgeHordeConfig {
                 .defineInRange("netheriteScoreThreshold", 8.0, 0.0, 100.0);
         b.pop();
 
+        b.comment("==========================================================",
+                  " SAFE ZONES (bell totems)",
+                  " Put a BELL on top of a 3x3 platform of metal blocks to keep",
+                  " hordes away from your base. The metal sets how big the safe",
+                  " zone is: iron < gold < diamond < netherite. Mix metals and",
+                  " the weakest one counts (so a half-built platform is only as",
+                  " strong as its worst block). The top tier is the exception: a",
+                  " single netherite block on an otherwise diamond platform counts",
+                  " as netherite. No nether star, and it works underground (the",
+                  " bell does not need to see the sky). Set a radius to 0 to",
+                  " disable that tier.",
+                  "==========================================================").push("ward");
+        WARD_ENABLED = b.comment("Master switch for bell-totem safe zones. Off = bells do nothing special.")
+                .define("enabled", true);
+        WARD_IRON_RADIUS = b.comment("Safe-zone radius in blocks for an IRON-block platform (the cheapest totem).")
+                .defineInRange("ironRadius", 48, 0, 256);
+        WARD_GOLD_RADIUS = b.comment("Safe-zone radius in blocks for a GOLD-block platform.")
+                .defineInRange("goldRadius", 64, 0, 256);
+        WARD_DIAMOND_RADIUS = b.comment("Safe-zone radius in blocks for a DIAMOND-block platform.")
+                .defineInRange("diamondRadius", 80, 0, 256);
+        WARD_NETHERITE_RADIUS = b.comment("Safe-zone radius in blocks for a NETHERITE-block platform",
+                        "(diamond platform with at least one netherite block). The strongest totem.")
+                .defineInRange("netheriteRadius", 112, 0, 256);
+        b.pop();
+
         SPEC = b.build();
     }
 
@@ -306,7 +338,9 @@ public final class NeoForgeHordeConfig {
                         TYPE_ELITE.get(), TYPE_NETHER.get(), TYPE_END.get(),
                         SKELETON_ENCHANTED_BOW_CHANCE.get(), SKELETON_SWORD_LEADER_CHANCE.get(),
                         ELITE_SCORE_GATE.get(), ELITE_BASE_CHANCE.get(), ELITE_PER_SCORE.get(), ELITE_MAX_CHANCE.get()),
-                new HordeConfig.Tiers(DIAMOND_THRESHOLD.get(), NETHERITE_THRESHOLD.get()));
+                new HordeConfig.Tiers(DIAMOND_THRESHOLD.get(), NETHERITE_THRESHOLD.get()),
+                new HordeConfig.Ward(WARD_ENABLED.get(), WARD_IRON_RADIUS.get(), WARD_GOLD_RADIUS.get(),
+                        WARD_DIAMOND_RADIUS.get(), WARD_NETHERITE_RADIUS.get()));
     }
 
     /** Resolves configured dimension entries (short names allowed) to full {@code namespace:path} ids. */

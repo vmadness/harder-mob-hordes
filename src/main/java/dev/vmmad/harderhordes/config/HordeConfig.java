@@ -18,7 +18,8 @@ public record HordeConfig(
         Hybrid hybrid,
         Creeper creeper,
         Types types,
-        Tiers tiers) {
+        Tiers tiers,
+        Ward ward) {
 
     public record Spawn(
             int checkIntervalTicks,
@@ -79,6 +80,24 @@ public record HordeConfig(
 
     public record Tiers(double diamondScoreThreshold, double netheriteScoreThreshold) {}
 
+    /**
+     * Bell-totem safe zones. A bell on a 3x3 platform of metal blocks keeps hordes
+     * out to a radius set by the platform material (mixed platforms count as their
+     * weakest block). See {@code horde.ward.WardSuppression}.
+     */
+    public record Ward(
+            boolean enabled,
+            int ironRadius,
+            int goldRadius,
+            int diamondRadius,
+            int netheriteRadius) {
+
+        /** Largest protection radius across the tiers; bounds the totem search. */
+        public int maxRadius() {
+            return Math.max(Math.max(ironRadius, goldRadius), Math.max(diamondRadius, netheriteRadius));
+        }
+    }
+
     /** Sensible defaults, also used before any config has loaded. */
     public static HordeConfig defaults() {
         return new HordeConfig(
@@ -92,6 +111,7 @@ public record HordeConfig(
                 new Hybrid(5.0, 0.35),
                 new Creeper(0.1, 2, 0.3),
                 new Types(true, true, true, true, true, true, true, 0.4, 0.5, 8.0, 0.02, 0.01, 0.2),
-                new Tiers(5.0, 8.0));
+                new Tiers(5.0, 8.0),
+                new Ward(true, 48, 64, 80, 112));
     }
 }

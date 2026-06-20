@@ -17,6 +17,7 @@ import dev.vmmad.harderhordes.horde.type.HordeComposition;
 import dev.vmmad.harderhordes.horde.type.HordeDefinition;
 import dev.vmmad.harderhordes.horde.type.HordeDimension;
 import dev.vmmad.harderhordes.horde.type.HordeTypeSelector;
+import dev.vmmad.harderhordes.horde.ward.WardSuppression;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -82,6 +83,11 @@ public final class HordeManager {
         boolean night = !level.isDay();
         double chance = cfg.spawn().dayBaseChance() * (night ? cfg.spawn().nightMultiplier() : 1.0) * rampFactor;
         if (rng.nextDouble() >= chance) {
+            return;
+        }
+
+        // Bell-totem safe zones: if the player is inside one, skip the horde entirely.
+        if (WardSuppression.isProtected(level, player.blockPosition(), cfg)) {
             return;
         }
 

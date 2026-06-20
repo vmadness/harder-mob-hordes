@@ -48,6 +48,11 @@ The things people usually change:
   per horde drops its gear; the rest drop nothing.
 - **Toggle mob types:** `[types]` switches `zombie`, `skeleton`, `creeper`, `aquatic`,
   `elite`, `nether`, and `end` on or off.
+- **Safe zones:** `[ward]` lets players keep hordes away from a base by placing a **bell
+  on a 3x3 platform of metal blocks**. The metal sets the radius (`ironRadius` <
+  `goldRadius` < `diamondRadius` < `netheriteRadius`); a mixed platform counts as its
+  weakest block. No nether star, works underground. `/harderhordes ward` reports whether
+  you're standing in one.
 
 <details>
 <summary>Full config reference</summary>
@@ -147,6 +152,24 @@ The things people usually change:
 | --- | --- | --- | --- |
 | `diamondScoreThreshold` | 5.0 | 0–100 | Score at which diamond gear can appear. |
 | `netheriteScoreThreshold` | 8.0 | 0–100 | Score at which netherite gear can appear. |
+
+### `[ward]` — bell-totem safe zones
+
+A bell on a 3x3 platform of metal blocks suppresses hordes within a radius set by the
+platform material (a mixed platform counts as its weakest block). The top tier is the
+exception: a single netherite block on an otherwise diamond platform counts as netherite,
+so you don't need nine netherite blocks. Detection piggybacks on the vanilla bell block
+entity, so there's no volume scanning.
+
+| Key | Default | Range | Meaning |
+| --- | --- | --- | --- |
+| `enabled` | true | — | Master switch for bell totems. |
+| `ironRadius` | 48 | 0–256 | Safe-zone radius for an iron-block platform. |
+| `goldRadius` | 64 | 0–256 | Safe-zone radius for a gold-block platform. |
+| `diamondRadius` | 80 | 0–256 | Safe-zone radius for a diamond-block platform. |
+| `netheriteRadius` | 112 | 0–256 | Safe-zone radius for the top tier: a diamond platform with at least one netherite block. |
+
+Set a radius to `0` to disable that tier.
 
 </details>
 

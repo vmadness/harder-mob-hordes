@@ -35,6 +35,15 @@ the complete rundown for anyone who wants the details.
 - **Rare loot.** Now and then a horde tags a single mob whose gear actually drops, so
   clearing one can pay off. Most mobs drop nothing.
 
+## Defend your base
+
+- **Bell-totem safe zones.** Place a bell on top of a 3x3 platform of metal blocks and
+  hordes stop spawning around it. The metal decides the radius: iron (small) < gold <
+  diamond < netherite (largest); a mixed platform counts as its weakest block. The top
+  tier only needs a single netherite block on an otherwise diamond platform, not nine. No
+  nether star needed and it works underground, so it protects any house, base, or village.
+  Check coverage with `/harderhordes ward`. Tune the radii (or turn it off) in `[ward]`.
+
 ## Make it yours
 
 - **Deeply configurable.** Spawn rate, horde size, gear tiers, drop chances, extra
@@ -55,6 +64,7 @@ the complete rundown for anyone who wants the details.
 - `score` — show your current danger level and how it breaks down.
 - `list` — list horde types and which ones match where you're standing.
 - `recent` — show the last few hordes that spawned.
+- `ward` — tell you whether you're standing inside a bell-totem safe zone.
 
 ## Compatibility
 

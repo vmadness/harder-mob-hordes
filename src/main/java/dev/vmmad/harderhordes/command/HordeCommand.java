@@ -15,6 +15,7 @@ import dev.vmmad.harderhordes.horde.type.HordeDefinition;
 import dev.vmmad.harderhordes.horde.type.HordeDefinitions;
 import dev.vmmad.harderhordes.horde.type.HordeTypeRegistry;
 import dev.vmmad.harderhordes.horde.type.HordeTypeSelector;
+import dev.vmmad.harderhordes.horde.ward.WardSuppression;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -48,7 +49,8 @@ public final class HordeCommand {
                                 .executes(HordeCommand::spawnType)))
                 .then(Commands.literal("score").executes(HordeCommand::showScore))
                 .then(Commands.literal("list").executes(HordeCommand::listDefinitions))
-                .then(Commands.literal("recent").executes(HordeCommand::recent)));
+                .then(Commands.literal("recent").executes(HordeCommand::recent))
+                .then(Commands.literal("ward").executes(HordeCommand::ward)));
     }
 
     private static int spawnType(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -85,6 +87,15 @@ public final class HordeCommand {
                 "Progression score: %.2f  (days %.2f, difficulty %.2f, gear %.2f)",
                 score.total(), score.dayScore(), score.difficultyScore(), score.gearScore())), false);
         return (int) Math.round(score.total());
+    }
+
+    private static int ward(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        boolean safe = WardSuppression.isProtected(player.serverLevel(), player.blockPosition(), HordeConfigHolder.get());
+        ctx.getSource().sendSuccess(() -> Component.literal(safe
+                ? "You are inside a bell-totem safe zone: hordes will not spawn on you here."
+                : "You are NOT in a safe zone. Build a bell on a 3x3 platform of metal blocks (iron/gold/diamond/netherite) to make one."), false);
+        return safe ? 1 : 0;
     }
 
     private static int recent(CommandContext<CommandSourceStack> ctx) {
